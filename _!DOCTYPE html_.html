@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz FIFA 26</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #071a12, #0b5c36, #16a05d);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 700px;
+            background: #101820;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            text-align: center;
+            color: #39ff88;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #ccc;
+            margin-bottom: 25px;
+        }
+
+        .progress {
+            width: 100%;
+            height: 10px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 10%;
+            background: #39ff88;
+            transition: width 0.3s;
+        }
+
+        .question-number {
+            color: #39ff88;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .answer {
+            background: #1d2933;
+            border: 2px solid #344552;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: left;
+            transition: 0.2s;
+        }
+
+        .answer:hover {
+            background: #263743;
+            border-color: #39ff88;
+        }
+
+        .answer.correct {
+            background: #176b3a;
+            border-color: #39ff88;
+        }
+
+        .answer.wrong {
+            background: #7a2020;
+            border-color: #ff4d4d;
+        }
+
+        .answer:disabled {
+            cursor: default;
+        }
+
+        #next-btn {
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #39ff88;
+            color: #071a12;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+        }
+
+        #next-btn:hover {
+            background: #20d96b;
+        }
+
+        .result {
+            text-align: center;
+            display: none;
+        }
+
+        .result h2 {
+            color: #39ff88;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            font-size: 50px;
+            font-weight: bold;
+            margin: 20px;
+        }
+
+        .message {
+            font-size: 20px;
+            margin-bottom: 25px;
+        }
+
+        #restart-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            background: #39ff88;
+            color: #071a12;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #restart-btn:hover {
+            background: #20d96b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="quiz-container">
+
+        <div id="quiz">
+
+            <h1>⚽ Quiz FIFA 26</h1>
+            <p class="subtitle">Teste seus conhecimentos sobre o jogo!</p>
+
+            <div class="progress">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="question-number" id="question-number">
+                Questão 1 de 10
+            </div>
+
+            <div class="question" id="question">
+                Pergunta aqui
+            </div>
+
+            <div class="answers" id="answers"></div>
+
+            <button id="next-btn">Próxima questão ➜</button>
+
+        </div>
+
+        <div class="result" id="result">
+
+            <h2>🏆 Quiz finalizado!</h2>
+
+            <p>Você acertou:</p>
+
+            <div class="score" id="score">0/10</div>
+
+            <div class="message" id="message"></div>
+
+            <button id="restart-btn">
+                🔄 Jogar novamente
+            </button>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const questions = [
+
+            {
+                question: "Qual empresa desenvolve e publica o EA Sports FC 26?",
+                answers: [
+                    "EA Sports",
+                    "Konami",
+                    "Ubisoft",
+                    "2K Games"
+                ],
+                correct: 0
+            },
+
+            {
+                question: "Qual é o principal modo de construção de equipe do EA Sports FC?",
+                answers: [
+                    "Ultimate Team",
+                    "Career Builder",
+                    "Football Master",
+                    "Pro League"
+                ],
+                correct: 0
+            },
+
+            {
+                question: "Qual modo permite ao jogador comandar um clube como treinador?",
+                answers: [
+                    "Modo Carreira",
+                    "Volta",
+                    "Ultimate Team",
+                    "Clubs"
+                ],
+                correct: 0
+            },
+
+            {
+                question: "Qual posição normalmente utiliza a sigla 'GK'?",
+                answers: [
+                    "Atacante",
+                    "Goleiro",
+                    "Meia",
+                    "Zagueiro"
+                ],
+                correct: 1
+            },
+
+            {
+                question: "O que significa a sigla 'ST' em uma escalação de futebol?",
+                answers: [
+                    "Lateral",
+                    "Volante",
+                    "Atacante",
+                    "Goleiro"
+                ],
+                correct: 2
+            },
+
+            {
+                question: "Qual destes é um atributo importante para um jogador de futebol virtual?",
+                answers: [
+                    "Velocidade",
+                    "Altura da tela",
+                    "Memória RAM",
+                    "Tamanho do controle"
+                ],
+                correct: 0
+            },
+
+            {
+                question: "Em qual modo os jogadores podem montar um elenco usando cartas?",
+                answers: [
+                    "Ultimate Team",
+                    "Modo Carreira",
+                    "Treino",
+                    "Configurações"
+                ],
+                correct: 0
+            },
+
+            {
+                question: "Qual destas posições fica normalmente no gol?",
+                answers: [
+                    "CAM",
+                    "GK",
+                    "ST",
+                    "CM"
+                ],
+                correct: 1
+            },
+
+            {
+                question: "Qual destes é um tipo de partida encontrado em jogos de futebol da série EA Sports FC?",
+                answers: [
+                    "Partida rápida",
+                    "Corrida de carros",
+                    "Batalha espacial",
+                    "Tênis"
+                ],
+                correct: 0
+            },
+
+            {
+                question: "Qual é o objetivo principal em uma partida de futebol?",
+                answers: [
+                    "Marcar mais gols que o adversário",
+                    "Ter mais jogadores em campo",
+                    "Fazer mais passes",
+                    "Ter mais posse sempre"
+                ],
+                correct: 0
+            }
+
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        const questionNumber =
+            document.getElementById("question-number");
+
+        const question =
+            document.getElementById("question");
+
+        const answers =
+            document.getElementById("answers");
+
+        const nextBtn =
+            document.getElementById("next-btn");
+
+        const progressBar =
+            document.getElementById("progress-bar");
+
+        const quiz =
+            document.getElementById("quiz");
+
+        const result =
+            document.getElementById("result");
+
+        const scoreElement =
+            document.getElementById("score");
+
+        const message =
+            document.getElementById("message");
+
+        const restartBtn =
+            document.getElementById("restart-btn");
+
+
+        function loadQuestion() {
+
+            nextBtn.style.display = "none";
+
+            const current = questions[currentQuestion];
+
+            questionNumber.textContent =
+                `Questão ${currentQuestion + 1} de ${questions.length}`;
+
+            question.textContent = current.question;
+
+            answers.innerHTML = "";
+
+            progressBar.style.width =
+                `${((currentQuestion + 1) / questions.length) * 100}%`;
+
+
+            current.answers.forEach((answer, index) => {
+
+                const button = document.createElement("button");
+
+                button.classList.add("answer");
+
+                button.textContent = answer;
+
+                button.addEventListener("click", () => {
+                    selectAnswer(button, index);
+                });
+
+                answers.appendChild(button);
+
+            });
+        }
+
+
+        function selectAnswer(button, selectedIndex) {
+
+            const current = questions[currentQuestion];
+
+            const allButtons =
+                document.querySelectorAll(".answer");
+
+            allButtons.forEach(btn => {
+                btn.disabled = true;
+            });
+
+
+            if (selectedIndex === current.correct) {
+
+                button.classList.add("correct");
+
+                score++;
+
+            } else {
+
+                button.classList.add("wrong");
+
+                allButtons[current.correct]
+                    .classList.add("correct");
+            }
+
+            nextBtn.style.display = "block";
+        }
+
+
+        nextBtn.addEventListener("click", () => {
+
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+
+                loadQuestion();
+
+            } else {
+
+                showResult();
+
+            }
+
+        });
+
+
+        function showResult() {
+
+            quiz.style.display = "none";
+
+            result.style.display = "block";
+
+            scoreElement.textContent =
+                `${score}/${questions.length}`;
+
+
+            if (score === 10) {
+
+                message.textContent =
+                    "🔥 Incrível! Você acertou todas!";
+
+            } else if (score >= 7) {
+
+                message.textContent =
+                    "👏 Muito bom! Você conhece bastante de futebol!";
+
+            } else if (score >= 5) {
+
+                message.textContent =
+                    "👍 Bom trabalho! Mas ainda dá para melhorar.";
+
+            } else {
+
+                message.textContent =
+                    "⚽ Continue jogando e estudando futebol!";
+
+            }
+
+        }
+
+
+        restartBtn.addEventListener("click", () => {
+
+            currentQuestion = 0;
+
+            score = 0;
+
+            result.style.display = "none";
+
+            quiz.style.display = "block";
+
+            loadQuestion();
+
+        });
+
+
+        loadQuestion();
+
+    </script>
+
+</body>
+</html>
